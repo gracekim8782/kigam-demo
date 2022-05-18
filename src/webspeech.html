@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Speech API</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  </head>
+
+  <body>
+    <div style="display: flex; flex-direction: row; align-items: flex-center">
+      <textarea id="results" rows="3" cols="50"></textarea>
+      <button id="start-recording" onclick="startButton(event)">
+        <img id="start_img" src="public/mic.gif" alt="Start" />
+      </button>
+    </div>
+
+    <script type="text/javascript">
+      const resultpreview = document.getElementById("results");
+      var recognizing = false;
+
+      const socket = io();
+
+      // webkitSpeechRecognition이 없다면 브라우저를 업그레이드
+      if (!("webkitSpeechRecognition" in window)) {
+        upgrade();
+      } else {
+        var recognition = new webkitSpeechRecognition();
+        // 한국어로 음성 인식 언어 설정
+        recognition.lang = "ko-Kr";
+
+        recognition.onstart = function () {
+          recognizing = true;
+          start_img.src = "public/mic-animate.gif";
+        };
+
+        // 음성 인식 결과값이 생성 됐을 때
+        recognition.onresult = function (event) {
+          if (event.results.length > 0) {
+            const text = event.results[0][0].transcript;
+            // 웹페이지에 음성 인식 결과를 출력
+            resultpreview.innerHTML += "음성 인식 결과 [" + text + "] ->";
+            // 웹소켓을 통해 서버에 음성 인식 결과를 "ner"이란 이름의 이벤트로 보냄
+            socket.emit("ner", text);
+          }
+        };
+
+        // 음성 입력 끝났을 때
+        recognition.onend = function () {
+          recognizing = false;
+          start_img.src = "public/mic.gif";
+        };
+      }
+
+      // 서버에서 웹소켓을 통해 개체명 인식 결과를 받을 시 웹페이지에 출력
+      socket.on("ner-results", function (data) {
+        resultpreview.innerHTML += " " + data;
+      });
+
+      // 마이크 버튼이 눌러졌을 때 음성 인식을 시작하는 함수
+      function startButton(event) {
+        if (recognizing) {
+          recognition.stop();
+          return;
+        }
+        recognition.start();
+        start_img.src = "public/mic.gif";
+      }
+    </script>
+  </body>
+</html>
