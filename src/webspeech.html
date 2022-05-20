@@ -15,11 +15,6 @@
       </button>
     </div>
 
-    <div style="display: flex; flex-direction: row; align-items: flex-center">
-      <textarea id="text-to-send" rows="3" cols="50"></textarea>
-      <button id="send-text" onclick="sendText(event)">Send Text</button>
-    </div>
-
     <script type="text/javascript">
       const resultpreview = document.getElementById("results");
       var recognizing = false;
@@ -42,7 +37,6 @@
 
         // 음성 인식 결과값이 생성 됐을 때
         recognition.onresult = function (event) {
-          console.log(event);
           if (event.results.length > 0) {
             const text = event.results[0][0].transcript;
             // 웹페이지에 음성 인식 결과를 출력

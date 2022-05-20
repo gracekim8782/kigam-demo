@@ -1,5 +1,4 @@
 const path = require("path");
-const http = require("http");
 const cors = require("cors");
 const express = require("express");
 const SocketIO = require("socket.io");
@@ -22,7 +21,9 @@ function setupServer() {
     res.sendFile(path.join(__dirname + "/webspeech.html"));
   });
 
-  const server = http.createServer(app).listen(port);
+  const server = app.listen(port, () => {
+    console.log("localhost:3000");
+  });
 
   const io = SocketIO(server, {
     allowEIO3: true, // false by default
@@ -58,10 +59,11 @@ async function googleEntity(text, socket) {
     for (var entity of response.data.entities) {
       entityList.push(entity.name);
     }
-    returnText = "개체명 인식 결과: [" + entityList.toString() + "] ";
+    returnText =
+      "Google NLP API 개체명 인식 결과: [" + entityList.toString() + "] ";
   } catch (error) {
     // API 호출 실패
-    returnText = "에러: " + error.response.statusText + " ";
+    returnText = "Google NLP API 에러: " + error.response.statusText + " ";
   }
 
   // 브라우저로 개체명 인식 결과를 소켓을 통해 반환
@@ -93,10 +95,10 @@ async function etriEntity(text, socket) {
     for (var entity of response.data.entities) {
       entityList.push(entity.name);
     }
-    returnText = "개체명 인식 결과: [" + entityList.toString() + "] ";
+    returnText = "ETRI API 개체명 인식 결과: [" + entityList.toString() + "]";
   } catch (error) {
     // API 호출 실패
-    returnText = "에러: " + error.response.data.reason + " ";
+    returnText = "ETRI API 에러: " + error.response.data.reason;
   }
 
   // 브라우저로 개체명 인식 결과를 소켓을 통해 반환
