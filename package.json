@@ -2,7 +2,7 @@
   "name": "kigam-demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/webspeech-server",
   "scripts": {
     "start": "node src/webspeech-server"
   },

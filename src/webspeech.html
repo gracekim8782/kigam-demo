@@ -3,16 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Web Speech API</title>
+    <title>KIGAM Voice Search Demo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
 
   <body>
     <div style="display: flex; flex-direction: row; align-items: flex-center">
       <textarea id="results" rows="3" cols="50"></textarea>
       <button id="start-recording" onclick="startButton(event)">
-        <img id="start_img" src="public/mic.gif" alt="Start" />
+        <img id="start_img" src="/public/mic.gif" alt="Start" />
       </button>
+    </div>
+
+    <div style="display: flex; flex-direction: row; align-items: flex-center">
+      <textarea id="text-to-send" rows="3" cols="50"></textarea>
+      <button id="send-text" onclick="sendText(event)">Send Text</button>
     </div>
 
     <script type="text/javascript">
@@ -28,14 +34,16 @@
         var recognition = new webkitSpeechRecognition();
         // 한국어로 음성 인식 언어 설정
         recognition.lang = "ko-Kr";
+        // recognition.continuous = true;
 
         recognition.onstart = function () {
           recognizing = true;
-          start_img.src = "public/mic-animate.gif";
+          start_img.src = "/public/mic-animate.gif";
         };
 
         // 음성 인식 결과값이 생성 됐을 때
         recognition.onresult = function (event) {
+          console.log(event);
           if (event.results.length > 0) {
             const text = event.results[0][0].transcript;
             // 웹페이지에 음성 인식 결과를 출력
@@ -48,7 +56,7 @@
         // 음성 입력 끝났을 때
         recognition.onend = function () {
           recognizing = false;
-          start_img.src = "public/mic.gif";
+          start_img.src = "/public/mic.gif";
         };
       }
 
@@ -64,8 +72,37 @@
           return;
         }
         recognition.start();
-        start_img.src = "public/mic.gif";
+        start_img.src = "/public/mic.gif";
       }
+
+      function sendText(event) {
+        const textToSend = document.getElementById("text-to-send");
+        socket.emit("ner", textToSend.value);
+      //   googleApiURL = `https://language.googleapis.com/v1/documents:analyzeEntities?key=`;
+
+      //   let postData = {
+      //     encodingType: "UTF8",
+      //     document: {
+      //       type: "PLAIN_TEXT",
+      //       content: textToSend.value,
+      //     },
+      //   };
+
+      //   axios
+      //     .post(googleApiURL, postData)
+      //     .then(function (response) {
+      //       // 개체명으로 이루어진 배열 생성
+      //       var entityList = [];
+      //       for (var entity of response.data.entities) {
+      //         entityList.push(entity.name);
+      //       }
+      //       returnText = "개체명 인식 결과: [" + entityList.toString() + "] ";
+      //       resultpreview.innerHTML += "(브라우저에서 호출) " + returnText;
+      //     })
+      //     .catch(function (error) {
+      //       console.log("에러 발생: ", error);
+      //     });
+      // }
     </script>
   </body>
 </html>
