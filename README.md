@@ -42,6 +42,8 @@ API Key 발급
 ### API Key 입력
 최상위 폴더의 .env 파일에 발급 받은 키를 입력
 
+<img width="720" src="https://user-images.githubusercontent.com/105704549/170400915-d50cc48e-cd24-485f-810e-ca5e5322cbf4.png">
+
 ## 실행하기
 
 ```
