@@ -15,6 +15,12 @@
       </button>
     </div>
 
+    <!-- 밑에 코드는 디버깅 목적으로 텍스트를 직접 입력하여 API 호출 할 수 있음 -->
+    <!-- <div style="display: flex; flex-direction: row; align-items: flex-center">
+      <textarea id="text-to-send" rows="3" cols="50"></textarea>
+      <button id="send-button" onclick="sendText(event)">Test API</button>
+    </div> -->
+
     <script type="text/javascript">
       const resultpreview = document.getElementById("results");
       var recognizing = false;
@@ -28,26 +34,42 @@
         var recognition = new webkitSpeechRecognition();
         // 한국어로 음성 인식 언어 설정
         recognition.lang = "ko-Kr";
-        // recognition.continuous = true;
+        recognition.continuous = true;
+
+        var textToSend = "";
+        var currentIndex = 0;
 
         recognition.onstart = function () {
           recognizing = true;
           start_img.src = "/public/mic-animate.gif";
+
+          resultpreview.innerHTML += "음성 인식 결과: [";
         };
 
         // 음성 인식 결과값이 생성 됐을 때
         recognition.onresult = function (event) {
-          if (event.results.length > 0) {
-            const text = event.results[0][0].transcript;
-            // 웹페이지에 음성 인식 결과를 출력
-            resultpreview.innerHTML += "음성 인식 결과 [" + text + "] ->";
-            // 웹소켓을 통해 서버에 음성 인식 결과를 "ner"이란 이름의 이벤트로 보냄
-            socket.emit("ner", text);
+          if (event?.results.length > 0) {
+            resultpreview.innerHTML +=
+              event?.results[currentIndex][0].transcript;
+            textToSend += event?.results[currentIndex][0].transcript;
+          } else {
+            resultpreview.innerHTML += "음성 인식 실패! 다시 말해주세요";
           }
+          currentIndex++;
         };
 
         // 음성 입력 끝났을 때
         recognition.onend = function () {
+          // 웹페이지에 음성 인식 결과를 끊어서 즉각 출력
+          resultpreview.innerHTML += "] ->";
+          // 보낼 문자열이 존재할 때 웹소켓을 통해 서버에 음성 인식 결과를 "ner"이란 이름의 이벤트로 보냄
+          if (textToSend.length > 0) {
+            socket.emit("ner", textToSend);
+          }
+          // API 호출 시 사용할 문자열과 인덱스 변수 리셋
+          textToSend = "";
+          currentIndex = 0;
+
           recognizing = false;
           start_img.src = "/public/mic.gif";
         };
@@ -63,15 +85,17 @@
         if (recognizing) {
           recognition.stop();
           return;
+        } else {
+          recognition.start();
         }
-        recognition.start();
         start_img.src = "/public/mic.gif";
       }
 
-      function sendText(event) {
-        const textToSend = document.getElementById("text-to-send");
-        socket.emit("ner", textToSend.value);
-      }
+      // 밑에 코드는 디버깅 목적으로 텍스트를 직접 입력하여 API 호출 할 수 있음
+      // function sendText(event) {
+      //   const textToSend = document.getElementById("text-to-send");
+      //   socket.emit("ner", textToSend.value);
+      // }
     </script>
   </body>
 </html>

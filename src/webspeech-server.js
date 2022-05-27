@@ -92,13 +92,13 @@ async function etriEntity(text, socket) {
     const response = await axios.post(etriApiURL, postData, config);
     // 개체명으로 이루어진 배열 생성
     var entityList = [];
-    for (var entity of response.data.entities) {
-      entityList.push(entity.name);
+    for (var entity of response.data.return_object.sentence[0].NE) {
+      entityList.push(entity.text);
     }
     returnText = "ETRI API 개체명 인식 결과: [" + entityList.toString() + "]";
   } catch (error) {
     // API 호출 실패
-    returnText = "ETRI API 에러: " + error.response.data.reason;
+    returnText = "ETRI API 에러: " + error;
   }
 
   // 브라우저로 개체명 인식 결과를 소켓을 통해 반환
