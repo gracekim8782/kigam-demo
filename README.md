@@ -28,7 +28,7 @@ $ npm install
 <img width="1552" src="https://user-images.githubusercontent.com/105704549/169735415-c1cbd462-15b5-409a-adb3-e1fd85b38ddc.png">
 <img width="1552" src="https://user-images.githubusercontent.com/105704549/169735694-66667212-8720-40f6-8a58-99ddbc28ee76.png">
 
-API Key 발급
+Google Cloud Platform NLP API 설정
 
 왼쪽에 ≡ 버튼 눌러서 API 및 서비스 -> 사용 설정된 API 및 서비스 페이지로 이동
 
@@ -39,12 +39,21 @@ API Key 발급
 <img width="1552" src="https://user-images.githubusercontent.com/105704549/169735397-b4a6999b-bb84-453e-86e0-5f6d65266307.png">
 <img width="1552" src="https://user-images.githubusercontent.com/105704549/169735402-e4587b95-2472-416d-9a09-cf6fe508185e.png">
 
-### API Key 입력
+API 키 발급
+
+API 및 서비스 아래 사용자 인증 정보 -> 상단에 + 사용자 인증 정보 만들기 선택 후 API 키 선택
+
+<img width="1792" src="https://user-images.githubusercontent.com/105704549/181163483-4d77d015-fbe6-4c77-b471-ae73f5960d41.png">
+<img width="1792" src="https://user-images.githubusercontent.com/105704549/181163493-f953bb8e-25b7-4b38-8a6e-c15286490d8b.png">
+<img width="1792" src="https://user-images.githubusercontent.com/105704549/181163501-0b67a014-8b6d-4521-b8a9-ed8dd001be1c.png">
+<img width="1792" src="https://user-images.githubusercontent.com/105704549/181163510-e18cf4b0-90e5-449c-a2eb-e27011abe4a5.png">
+
+### API 키 입력
 최상위 폴더의 .env 파일에 발급 받은 키를 입력
 
 <img width="720" src="https://user-images.githubusercontent.com/105704549/170400915-d50cc48e-cd24-485f-810e-ca5e5322cbf4.png">
 
-## 실행하기
+## 데모 실행하기
 
 ```
 $ npm start
