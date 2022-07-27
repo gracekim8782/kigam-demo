@@ -60,3 +60,6 @@ $ npm start
 ```
 
 최상위 폴더에서 `npm start`로 서버 실행 후 `http://localhost:3000/` 주소로 이동
+
+## 문의
+문의는 yeeunk@utexas.edu로 이메일 부탁드립니다.
